@@ -208,4 +208,17 @@ interface Toggle {
 	 * @return void
 	 */
 	public function boot_early(): void;
+
+	/**
+	 * Whether this feature is effectively disabled for an optional context.
+	 *
+	 * Context is feature-specific (post type, heartbeat screen, …). Null means
+	 * “is the module active at all”. Locked or inactive modules return false.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string|null $context Optional sub-context.
+	 * @return bool
+	 */
+	public function is_disabled_in_context( ?string $context ): bool;
 }

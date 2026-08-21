@@ -207,6 +207,27 @@ final class Heartbeat extends AbstractToggle {
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function is_disabled_in_context( ?string $context ): bool {
+		if ( ! $this->is_enabled() || $this->is_locked() ) {
+			return false;
+		}
+
+		if ( null === $context || '' === $context ) {
+			return true;
+		}
+
+		if ( 'editor' === $context ) {
+			return false;
+		}
+
+		$stored = $this->stored();
+
+		return isset( $stored[ $context ] ) && 'off' === $stored[ $context ];
+	}
+
+	/**
 	 * Stored nested options with defaults.
 	 *
 	 * @since 0.1.0

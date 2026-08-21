@@ -116,3 +116,33 @@ function bsot_boot() {
 }
 
 add_action( 'plugins_loaded', 'bsot_boot' );
+
+/**
+ * Whether this plugin is actively disabling a feature.
+ *
+ * Never call this without `function_exists()` — the plugin may be off.
+ * Available from `plugins_loaded` (priority 10) onward; prefer
+ * `after_setup_theme` or `init` in theme code.
+ *
+ * @since 0.1.0
+ *
+ * @param string      $feature Module id, e.g. `gutenberg`.
+ * @param string|null $context Optional sub-context (post type, `frontend`, …).
+ * @return bool
+ */
+function bsot_is_disabled( $feature, $context = null ) {
+	return \BS\OverheadToggles\Api::is_disabled( (string) $feature, null === $context ? null : (string) $context );
+}
+
+/**
+ * Raw stored option for a module, or a dotted nested key.
+ *
+ * @since 0.1.0
+ *
+ * @param string $key     Module id (`gutenberg`) or `id.subkey` (`heartbeat.frontend`).
+ * @param mixed  $default Fallback when the key is unknown.
+ * @return mixed
+ */
+function bsot_get_option( $key, $default = null ) {
+	return \BS\OverheadToggles\Api::get_option( (string) $key, $default );
+}

@@ -161,7 +161,7 @@ final class Settings {
 	public function register_page(): void {
 		add_menu_page(
 			__( 'BS Overhead Toggles', 'bs-overhead-toggles' ),
-			__( 'Werkzeuge', 'bs-overhead-toggles' ),
+			__( 'Overhead', 'bs-overhead-toggles' ),
 			'manage_options',
 			self::PAGE_SLUG,
 			array( $this, 'render_page' ),

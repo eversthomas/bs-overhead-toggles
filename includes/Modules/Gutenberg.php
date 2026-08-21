@@ -217,19 +217,44 @@ final class Gutenberg extends AbstractToggle {
 	 * @return bool
 	 */
 	public function filter_block_editor( bool $use, string $post_type ): bool {
-		if ( in_array( $post_type, self::SKIP_TYPES, true ) ) {
-			return $use;
-		}
-
-		$options    = Settings::get_all();
-		$gutenberg  = isset( $options['gutenberg'] ) && is_array( $options['gutenberg'] ) ? $options['gutenberg'] : $this->get_default();
-		$exceptions = isset( $gutenberg['post_types'] ) && is_array( $gutenberg['post_types'] ) ? $gutenberg['post_types'] : array();
-
-		if ( in_array( $post_type, $exceptions, true ) ) {
-			return true;
+		if ( ! $this->is_disabled_in_context( $post_type ) ) {
+			return in_array( $post_type, self::SKIP_TYPES, true ) ? $use : true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function is_disabled_in_context( ?string $context ): bool {
+		if ( ! $this->is_enabled() || $this->is_locked() ) {
+			return false;
+		}
+
+		if ( null === $context || '' === $context ) {
+			return true;
+		}
+
+		if ( in_array( $context, self::SKIP_TYPES, true ) ) {
+			return false;
+		}
+
+		return ! in_array( $context, $this->exceptions(), true );
+	}
+
+	/**
+	 * Post types that keep the block editor while the module is on.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string[]
+	 */
+	private function exceptions(): array {
+		$options   = Settings::get_all();
+		$gutenberg = isset( $options['gutenberg'] ) && is_array( $options['gutenberg'] ) ? $options['gutenberg'] : $this->get_default();
+
+		return isset( $gutenberg['post_types'] ) && is_array( $gutenberg['post_types'] ) ? $gutenberg['post_types'] : array();
 	}
 
 	/**

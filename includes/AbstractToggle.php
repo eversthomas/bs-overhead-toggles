@@ -190,4 +190,13 @@ abstract class AbstractToggle implements Toggle {
 	 * {@inheritdoc}
 	 */
 	public function boot_early(): void {}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function is_disabled_in_context( ?string $context ): bool {
+		unset( $context );
+
+		return $this->is_enabled() && ! $this->is_locked();
+	}
 }
