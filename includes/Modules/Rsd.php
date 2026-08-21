@@ -46,14 +46,14 @@ final class Rsd extends AbstractToggle {
 	 * {@inheritdoc}
 	 */
 	public function get_description(): string {
-		return __( 'Entfernt den Hinweis im Kopf, mit dem Schreibprogramme die Website zum Fernbearbeiten finden.', 'bs-overhead-toggles' );
+		return __( 'Entfernt den Hinweis, mit dem Schreibprogramme die Website zum Fernbearbeiten finden.', 'bs-overhead-toggles' );
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function get_what_it_does(): string {
-		return __( 'Nimmt den RSD-Link aus dem HTML-Kopf. XML-RPC selbst bleibt an — das ist ein eigener Schalter.', 'bs-overhead-toggles' );
+		return __( 'Nimmt den RSD-Link aus dem HTML-Kopf. XML-RPC selbst ist ein eigener Schalter — beide gehören zusammen, sonst bleibt ein toter Hinweis auf xmlrpc.php.', 'bs-overhead-toggles' );
 	}
 
 	/**

@@ -2,15 +2,18 @@
 /**
  * Settings page template.
  *
- * Expected in scope: Registry $registry, bool $updated, Settings $this via $this in Settings::render_page.
+ * Expected in scope: Registry $registry, bool $updated, bool $preset_applied, bool $preset_reset.
  *
  * @package BS\OverheadToggles
  */
 
 defined( 'ABSPATH' ) || exit;
 
-$categories = \BS\OverheadToggles\Registry::categories();
-$first_cat  = array_key_first( $categories );
+$categories      = \BS\OverheadToggles\Registry::categories();
+$first_cat       = array_key_first( $categories );
+$preset_applied  = $preset_applied ?? false;
+$preset_reset    = $preset_reset ?? false;
+$updated         = $updated ?? false;
 ?>
 <div class="wrap bsot-wrap">
 	<div
@@ -27,11 +30,41 @@ $first_cat  = array_key_first( $categories );
 			</div>
 		</header>
 
-		<?php if ( $updated ) : ?>
+		<?php if ( $preset_applied ) : ?>
+			<p class="bsot-confirm" role="status">
+				<?php esc_html_e( 'Standard-Konfiguration angewendet. Du kannst einzelne Schalter noch anpassen.', 'bs-overhead-toggles' ); ?>
+			</p>
+		<?php elseif ( $preset_reset ) : ?>
+			<p class="bsot-confirm" role="status">
+				<?php esc_html_e( 'Alle Schalter sind wieder aus, soweit sie nicht in der wp-config.php stehen.', 'bs-overhead-toggles' ); ?>
+			</p>
+		<?php elseif ( $updated ) : ?>
 			<p class="bsot-confirm" role="status">
 				<?php esc_html_e( 'Einstellungen gespeichert.', 'bs-overhead-toggles' ); ?>
 			</p>
 		<?php endif; ?>
+
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="bsot-setup">
+			<input type="hidden" name="action" value="bsot_preset" />
+			<?php wp_nonce_field( 'bsot_preset' ); ?>
+			<div class="bsot-setup-actions">
+				<button type="submit" name="bsot_preset" value="standard" class="bsot-btn bsot-btn-primary">
+					<?php esc_html_e( 'Standard-Konfiguration anwenden', 'bs-overhead-toggles' ); ?>
+				</button>
+				<button
+					type="submit"
+					name="bsot_preset"
+					value="reset"
+					class="bsot-btn bsot-btn-danger"
+					data-bsot-confirm="<?php echo esc_attr__( 'Alle Schalter auf Aus setzen? Werte aus der wp-config.php bleiben gesperrt.', 'bs-overhead-toggles' ); ?>"
+				>
+					<?php esc_html_e( 'Alles zurücksetzen', 'bs-overhead-toggles' ); ?>
+				</button>
+			</div>
+			<p class="bsot-setup-hint">
+				<?php esc_html_e( 'Schaltet den üblichen Overhead aus (Emojis, Block-CSS, Head-Hinweise, XML-RPC, Body-IDs). Gutenberg, Canonical, REST-Sperren, Speicherung und experimentelle Klassen bleiben aus. Bei Block-Themes das Frontend prüfen — Standard-Block-CSS fehlt dann.', 'bs-overhead-toggles' ); ?>
+			</p>
+		</form>
 
 		<form action="options.php" method="post" class="bsot-form">
 			<?php settings_fields( \BS\OverheadToggles\Settings::OPTION_GROUP ); ?>
@@ -73,7 +106,7 @@ $first_cat  = array_key_first( $categories );
 								<div class="bsot-card-body">
 									<?php if ( array() === $modules ) : ?>
 										<p class="bsot-empty">
-											<?php esc_html_e( 'In dieser Kategorie sind noch keine Schalter vorhanden. Sie erscheinen hier, sobald die zugehörigen Module ergänzt sind.', 'bs-overhead-toggles' ); ?>
+											<?php esc_html_e( 'In dieser Kategorie gibt es gerade keine Schalter.', 'bs-overhead-toggles' ); ?>
 										</p>
 									<?php else : ?>
 										<?php

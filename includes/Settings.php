@@ -64,6 +64,7 @@ final class Settings {
 		add_action( 'admin_init', array( $this, 'register_setting' ) );
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'admin_post_bsot_preset', array( $this, 'handle_preset' ) );
 		add_filter( 'plugin_action_links_' . BSOT_BASENAME, array( $this, 'action_links' ) );
 	}
 
@@ -254,11 +255,42 @@ final class Settings {
 			return;
 		}
 
-		$registry   = $this->registry;
-		$updated    = isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$view       = BSOT_DIR . 'admin/views/page-settings.php';
+		$registry        = $this->registry;
+		$updated         = isset( $_GET['settings-updated'] ) && 'true' === $_GET['settings-updated']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$preset_applied  = isset( $_GET['preset-applied'] ) && '1' === $_GET['preset-applied']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$preset_reset    = isset( $_GET['preset-reset'] ) && '1' === $_GET['preset-reset']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$view            = BSOT_DIR . 'admin/views/page-settings.php';
 
 		include $view;
+	}
+
+	/**
+	 * Applies the standard preset or resets all unlocked toggles.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	public function handle_preset(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Du darfst diese Einstellungen nicht ändern.', 'bs-overhead-toggles' ), '', array( 'response' => 403 ) );
+		}
+
+		check_admin_referer( 'bsot_preset' );
+
+		$which = isset( $_POST['bsot_preset'] ) ? sanitize_key( (string) $_POST['bsot_preset'] ) : '';
+
+		if ( ! in_array( $which, array( 'standard', 'reset' ), true ) ) {
+			wp_safe_redirect( self::page_url() );
+			exit;
+		}
+
+		update_option( self::OPTION_KEY, Preset::build( $this->registry, $which ) );
+
+		$flag = 'standard' === $which ? 'preset-applied' : 'preset-reset';
+
+		wp_safe_redirect( add_query_arg( $flag, '1', self::page_url() ) );
+		exit;
 	}
 
 	/**

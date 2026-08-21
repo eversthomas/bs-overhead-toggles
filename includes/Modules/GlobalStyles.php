@@ -74,6 +74,13 @@ final class GlobalStyles extends AbstractToggle {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function show_warning_inline(): bool {
+		return true;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function get_developer_details(): string {
 		return 'wp_enqueue_global_styles (wp_enqueue_scripts, wp_footer:1); handles global-styles, wp-global-styles-placeholder';
 	}

@@ -67,7 +67,14 @@ final class BlockLibraryCss extends AbstractToggle {
 	 * {@inheritdoc}
 	 */
 	public function get_breaks(): string {
-		return __( 'Gutenberg-Blöcke können ungestylt aussehen (Spalten, Buttons, Galerien, Abstand). Nur einschalten, wenn das Theme das selbst übernimmt.', 'bs-overhead-toggles' );
+		return __( 'Gutenberg-Blöcke können ungestylt aussehen (Spalten, Buttons, Galerien, Abstand). Nur einschalten, wenn das Theme das selbst übernimmt — bei Block-Themes vorher im Frontend prüfen.', 'bs-overhead-toggles' );
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function show_warning_inline(): bool {
+		return true;
 	}
 
 	/**

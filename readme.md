@@ -78,3 +78,11 @@ Eigene Module: Hook `bsot_register_modules` (übergibt `Registry`).
 - Heartbeat: `heartbeat_settings`, Dequeue Prio **100**
 
 Auth-Kern (Application Passwords, Cookies, Nonces) ist nicht abschaltbar.
+
+---
+
+## Quick-Setup
+
+Oben auf der Optionsseite: **Standard-Konfiguration anwenden**. Schaltet den 90 %-Fall (Emojis, Block-CSS, Dashicons, oEmbed, Feeds, Generator, RSD, Kurzlink, REST-Hinweis, XML-RPC, Eigen-Pingbacks, Body-IDs). Gutenberg, Canonical, REST-Sperren, Speicherung und experimentelle Klassen bleiben aus. `wp-config.php`-Sperren bleiben.
+
+**Alles zurücksetzen** (mit Nachfrage) setzt alle ungesperrten Schalter auf Aus.

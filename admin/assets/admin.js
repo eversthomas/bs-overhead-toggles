@@ -16,15 +16,35 @@
 		root.querySelectorAll('[data-bsot-tab]').forEach(function (tab) {
 			var selected = tab.getAttribute('data-bsot-tab') === slug;
 			tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+			tab.tabIndex = selected ? 0 : -1;
 		});
 		root.querySelectorAll('[data-bsot-panel]').forEach(function (panel) {
 			panel.hidden = panel.getAttribute('data-bsot-panel') !== slug;
 		});
 	}
 
-	root.querySelectorAll('[data-bsot-tab]').forEach(function (tab) {
+	var tabs = root.querySelectorAll('[data-bsot-tab]');
+	tabs.forEach(function (tab, index) {
+		tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
 		tab.addEventListener('click', function () {
 			setTab(tab.getAttribute('data-bsot-tab'));
+		});
+		tab.addEventListener('keydown', function (event) {
+			var next = index;
+			if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+				next = (index + 1) % tabs.length;
+			} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+				next = (index - 1 + tabs.length) % tabs.length;
+			} else if (event.key === 'Home') {
+				next = 0;
+			} else if (event.key === 'End') {
+				next = tabs.length - 1;
+			} else {
+				return;
+			}
+			event.preventDefault();
+			tabs[next].focus();
+			setTab(tabs[next].getAttribute('data-bsot-tab'));
 		});
 	});
 
@@ -74,6 +94,15 @@
 			var extra = row ? row.querySelector('[data-bsot-extra]') : null;
 			if (extra) {
 				extra.hidden = !on;
+			}
+		});
+	});
+
+	root.querySelectorAll('[data-bsot-confirm]').forEach(function (button) {
+		button.addEventListener('click', function (event) {
+			var message = button.getAttribute('data-bsot-confirm');
+			if (message && !window.confirm(message)) {
+				event.preventDefault();
 			}
 		});
 	});

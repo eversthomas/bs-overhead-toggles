@@ -33,7 +33,7 @@ final class OEmbed extends AbstractToggle {
 	 * {@inheritdoc}
 	 */
 	public function get_label(): string {
-		return __( 'Einbettungs-Erkennung und -Skript entfernen', 'bs-overhead-toggles' );
+		return __( 'Einbettungs-Erkennung entfernen', 'bs-overhead-toggles' );
 	}
 
 	/**

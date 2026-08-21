@@ -62,7 +62,7 @@ final class BlockClasses extends AbstractToggle {
 	 * {@inheritdoc}
 	 */
 	public function get_description(): string {
-		return __( 'Nimmt wp-block-* und Textausrichtung-Klassen von Blöcken. Fragil bei Core-Updates.', 'bs-overhead-toggles' );
+		return __( 'Nimmt wp-block-* und Textausrichtung von Blöcken. Fragil bei Core-Updates.', 'bs-overhead-toggles' );
 	}
 
 	/**
