@@ -167,13 +167,17 @@ final class Plugin {
 	/**
 	 * Instantiates toggle modules and adds them to the registry.
 	 *
-	 * Phase 1 has no modules yet; Phase 2+ adds them here.
-	 *
 	 * @since 0.1.0
 	 *
 	 * @return void
 	 */
 	private function register_modules(): void {
+		$this->registry->add( new Modules\Emojis() );
+		$this->registry->add( new Modules\BlockLibraryCss() );
+		$this->registry->add( new Modules\Dashicons() );
+		$this->registry->add( new Modules\OEmbed() );
+		$this->registry->add( new Modules\FeedLinks() );
+
 		/**
 		 * Fires when toggle modules may be added to the registry.
 		 *
