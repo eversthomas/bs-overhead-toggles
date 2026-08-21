@@ -22,6 +22,8 @@ final class Registry {
 	public const CAT_PRIVACY     = 'privacy';
 	public const CAT_CLEANUP     = 'cleanup';
 
+	public const GROUP_FRONTEND_CLASSES = 'frontend_classes';
+
 	/**
 	 * Registered modules keyed by id.
 	 *
@@ -109,6 +111,22 @@ final class Registry {
 			self::CAT_CLEANUP     => array(
 				'label'       => __( 'Aufräumen im Code', 'bs-overhead-toggles' ),
 				'description' => __( 'Standard-Ausgaben und automatisch gesetzte Klassen entfernen.', 'bs-overhead-toggles' ),
+			),
+		);
+	}
+
+	/**
+	 * Optional subgroup headings inside a category tab.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return array<string, array{label: string, description: string}>
+	 */
+	public static function groups(): array {
+		return array(
+			self::GROUP_FRONTEND_CLASSES => array(
+				'label'       => __( 'Frontend-Klassen', 'bs-overhead-toggles' ),
+				'description' => __( 'Automatisch gesetzte CSS-Klassen im HTML entfernen. Klassen, die du selbst im Theme oder Menü vergibst, bleiben.', 'bs-overhead-toggles' ),
 			),
 		);
 	}

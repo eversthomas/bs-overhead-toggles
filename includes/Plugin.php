@@ -185,6 +185,14 @@ final class Plugin {
 		$this->registry->add( new Modules\Rsd() );
 		$this->registry->add( new Modules\Gutenberg() );
 		$this->registry->add( new Modules\ClassicWidgets() );
+		$this->registry->add( new Modules\RestDiscovery() );
+		$this->registry->add( new Modules\RestUsers() );
+		$this->registry->add( new Modules\RestGuests() );
+		$this->registry->add( new Modules\BodyClasses() );
+		$this->registry->add( new Modules\PostClasses() );
+		$this->registry->add( new Modules\NavClasses() );
+		$this->registry->add( new Modules\ImageClasses() );
+		$this->registry->add( new Modules\BlockClasses() );
 
 		/**
 		 * Fires when toggle modules may be added to the registry.

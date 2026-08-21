@@ -49,6 +49,15 @@ interface Toggle {
 	public function get_category(): string;
 
 	/**
+	 * Optional subgroup slug within the category (empty = ungrouped).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_group(): string;
+
+	/**
 	 * One-line summary shown on the toggle row (not the full explanation).
 	 *
 	 * @since 0.1.0

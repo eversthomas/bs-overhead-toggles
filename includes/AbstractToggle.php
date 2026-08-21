@@ -32,6 +32,13 @@ abstract class AbstractToggle implements Toggle {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function get_group(): string {
+		return '';
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function is_experimental(): bool {
 		return false;
 	}
@@ -87,6 +94,27 @@ abstract class AbstractToggle implements Toggle {
 	 */
 	protected function locking_constant(): string {
 		return '';
+	}
+
+	/**
+	 * Whether the current request is public HTML (theme, AJAX fragments).
+	 *
+	 * Skips wp-admin screens and REST (block editor / Site Editor previews).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return bool
+	 */
+	protected function is_frontend_output(): bool {
+		if ( function_exists( 'wp_is_serving_rest_request' ) && wp_is_serving_rest_request() ) {
+			return false;
+		}
+
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

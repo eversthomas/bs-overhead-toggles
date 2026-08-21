@@ -76,9 +76,23 @@ $first_cat  = array_key_first( $categories );
 											<?php esc_html_e( 'In dieser Kategorie sind noch keine Schalter vorhanden. Sie erscheinen hier, sobald die zugehörigen Module ergänzt sind.', 'bs-overhead-toggles' ); ?>
 										</p>
 									<?php else : ?>
-										<?php foreach ( $modules as $toggle ) : ?>
-											<?php $this->render_toggle_row( $toggle ); ?>
-										<?php endforeach; ?>
+										<?php
+										$last_group = '';
+										$groups     = \BS\OverheadToggles\Registry::groups();
+										foreach ( $modules as $toggle ) :
+											$group = $toggle->get_group();
+											if ( '' !== $group && $group !== $last_group && isset( $groups[ $group ] ) ) :
+												?>
+												<div class="bsot-group">
+													<h3 class="bsot-group-title"><?php echo esc_html( $groups[ $group ]['label'] ); ?></h3>
+													<p class="bsot-group-lede"><?php echo esc_html( $groups[ $group ]['description'] ); ?></p>
+												</div>
+												<?php
+											endif;
+											$last_group = $group;
+											$this->render_toggle_row( $toggle );
+										endforeach;
+										?>
 									<?php endif; ?>
 								</div>
 							</div>
