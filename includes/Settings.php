@@ -18,10 +18,22 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Settings {
 
-	public const OPTION_KEY    = 'bsot_options';
-	public const OPTION_GROUP  = 'bsot_settings';
-	public const PAGE_SLUG     = 'bs-overhead-toggles';
+	public const OPTION_KEY     = 'bsot_options';
+	public const OPTION_GROUP   = 'bsot_settings';
+	public const PAGE_SLUG      = 'bs-overhead-toggles';
 	public const SCHEMA_VERSION = 1;
+
+	/**
+	 * Menu position just below Dashboard (2), before the first separator (4).
+	 *
+	 * Fractional string avoids colliding with other plugins at the same slot
+	 * and keeps the mantissa intact (WP uses the value as an array key).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var string
+	 */
+	public const MENU_POSITION = '3.001';
 
 	/**
 	 * Module registry.
@@ -140,20 +152,46 @@ final class Settings {
 	}
 
 	/**
-	 * Adds the page under Settings.
+	 * Adds a top-level menu item just below the Dashboard.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @return void
 	 */
 	public function register_page(): void {
-		add_options_page(
+		add_menu_page(
 			__( 'BS Overhead Toggles', 'bs-overhead-toggles' ),
-			__( 'Overhead Toggles', 'bs-overhead-toggles' ),
+			__( 'Werkzeuge', 'bs-overhead-toggles' ),
 			'manage_options',
 			self::PAGE_SLUG,
-			array( $this, 'render_page' )
+			array( $this, 'render_page' ),
+			$this->menu_icon(),
+			self::MENU_POSITION
 		);
+	}
+
+	/**
+	 * Admin URL of this plugin's settings screen.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public static function page_url(): string {
+		return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
+	}
+
+	/**
+	 * Base64 SVG: two toggle pills, matching the settings UI (monochrome for WP's menu mask).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	private function menu_icon(): string {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="black"><path d="M5 3.5h10a3.5 3.5 0 1 1 0 7H5a3.5 3.5 0 1 1 0-7zm10 1.75a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5zM5 10.5h10a3.5 3.5 0 1 1 0 7H5a3.5 3.5 0 1 1 0-7zm3.5 1.75a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5z"/></svg>';
+
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg );
 	}
 
 	/**
@@ -165,7 +203,7 @@ final class Settings {
 	 * @return void
 	 */
 	public function enqueue_assets( string $hook_suffix ): void {
-		if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
+		if ( 'toplevel_page_' . self::PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
 
@@ -194,7 +232,7 @@ final class Settings {
 	 * @return string[]
 	 */
 	public function action_links( array $links ): array {
-		$url = admin_url( 'options-general.php?page=' . self::PAGE_SLUG );
+		$url = self::page_url();
 
 		array_unshift(
 			$links,

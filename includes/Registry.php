@@ -23,6 +23,7 @@ final class Registry {
 	public const CAT_CLEANUP     = 'cleanup';
 
 	public const GROUP_FRONTEND_CLASSES = 'frontend_classes';
+	public const GROUP_STORAGE          = 'storage';
 
 	/**
 	 * Registered modules keyed by id.
@@ -127,6 +128,10 @@ final class Registry {
 			self::GROUP_FRONTEND_CLASSES => array(
 				'label'       => __( 'Frontend-Klassen', 'bs-overhead-toggles' ),
 				'description' => __( 'Automatisch gesetzte CSS-Klassen im HTML entfernen. Klassen, die du selbst im Theme oder Menü vergibst, bleiben.', 'bs-overhead-toggles' ),
+			),
+			self::GROUP_STORAGE          => array(
+				'label'       => __( 'Speicherung und Verlauf', 'bs-overhead-toggles' ),
+				'description' => __( 'Wie lange WordPress alte Fassungen und den Papierkorb behält.', 'bs-overhead-toggles' ),
 			),
 		);
 	}

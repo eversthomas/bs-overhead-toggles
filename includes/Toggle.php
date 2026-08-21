@@ -197,4 +197,15 @@ interface Toggle {
 	 * @return void
 	 */
 	public function register(): void;
+
+	/**
+	 * Runs on `plugins_loaded`, before core defines functionality constants.
+	 *
+	 * Used by modules that must `define()` AUTOSAVE_INTERVAL or EMPTY_TRASH_DAYS.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	public function boot_early(): void;
 }

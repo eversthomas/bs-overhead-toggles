@@ -185,4 +185,9 @@ abstract class AbstractToggle implements Toggle {
 	public function render_extra_fields( bool $locked ): void {
 		unset( $locked );
 	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function boot_early(): void {}
 }

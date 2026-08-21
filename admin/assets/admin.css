@@ -51,12 +51,12 @@
 	--bs-space-12: 48px;
 }
 
-body.settings_page_bs-overhead-toggles #wpcontent,
-body.settings_page_bs-overhead-toggles #wpbody-content {
+body.toplevel_page_bs-overhead-toggles #wpcontent,
+body.toplevel_page_bs-overhead-toggles #wpbody-content {
 	background: var(--bs-neutral-0);
 }
 
-body.settings_page_bs-overhead-toggles .wrap.bsot-wrap {
+body.toplevel_page_bs-overhead-toggles .wrap.bsot-wrap {
 	margin: 0;
 	max-width: none;
 	padding: var(--bs-space-8);
@@ -458,6 +458,31 @@ body.settings_page_bs-overhead-toggles .wrap.bsot-wrap {
 	color: var(--bs-neutral-700);
 	background: var(--bs-neutral-50);
 	resize: vertical;
+}
+
+.bsot-select-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--bs-space-3);
+	margin: 0 0 var(--bs-space-2);
+	font-size: var(--bs-text-sm);
+	color: var(--bs-neutral-700);
+}
+
+.bsot-select-row:last-child {
+	margin-bottom: 0;
+}
+
+.bsot-select {
+	min-width: 12rem;
+	padding: var(--bs-space-1) var(--bs-space-2);
+	border: var(--bs-border);
+	border-radius: var(--bs-radius-sm);
+	font: inherit;
+	font-size: var(--bs-text-sm);
+	color: var(--bs-neutral-700);
+	background: var(--bs-neutral-50);
 }
 
 @media (max-width: 782px) {

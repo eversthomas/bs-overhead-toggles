@@ -144,6 +144,7 @@ final class Plugin {
 		$this->register_modules();
 		$this->settings = new Settings( $this->registry );
 		$this->settings->hooks();
+		$this->boot_early_modules();
 
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'init', array( $this, 'boot_modules' ), 5 );
@@ -193,6 +194,12 @@ final class Plugin {
 		$this->registry->add( new Modules\NavClasses() );
 		$this->registry->add( new Modules\ImageClasses() );
 		$this->registry->add( new Modules\BlockClasses() );
+		$this->registry->add( new Modules\Xmlrpc() );
+		$this->registry->add( new Modules\SelfPingbacks() );
+		$this->registry->add( new Modules\Heartbeat() );
+		$this->registry->add( new Modules\Autosave() );
+		$this->registry->add( new Modules\Revisions() );
+		$this->registry->add( new Modules\Trash() );
 
 		/**
 		 * Fires when toggle modules may be added to the registry.
@@ -213,6 +220,25 @@ final class Plugin {
 	 */
 	public function boot_modules(): void {
 		$this->registry()->boot_enabled();
+	}
+
+	/**
+	 * Lets enabled modules define constants before wp_functionality_constants().
+	 *
+	 * Must run during `plugins_loaded`, still inside Plugin::boot().
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	private function boot_early_modules(): void {
+		foreach ( $this->registry()->all() as $toggle ) {
+			if ( $toggle->is_locked() || ! $toggle->is_enabled() ) {
+				continue;
+			}
+
+			$toggle->boot_early();
+		}
 	}
 
 	/**
