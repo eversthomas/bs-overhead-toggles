@@ -174,9 +174,15 @@ final class Plugin {
 	private function register_modules(): void {
 		$this->registry->add( new Modules\Emojis() );
 		$this->registry->add( new Modules\BlockLibraryCss() );
+		$this->registry->add( new Modules\GlobalStyles() );
+		$this->registry->add( new Modules\ImgAutoSizes() );
 		$this->registry->add( new Modules\Dashicons() );
 		$this->registry->add( new Modules\OEmbed() );
 		$this->registry->add( new Modules\FeedLinks() );
+		$this->registry->add( new Modules\Canonical() );
+		$this->registry->add( new Modules\Shortlink() );
+		$this->registry->add( new Modules\Generator() );
+		$this->registry->add( new Modules\Rsd() );
 
 		/**
 		 * Fires when toggle modules may be added to the registry.
