@@ -14,9 +14,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Single entry point after autoloading is in place.
  *
- * Phase 0: textdomain, activation bookkeeping, hook points for later phases.
- * Settings, module registry and admin UI are intentionally not wired yet.
- *
  * @since 0.1.0
  */
 final class Plugin {
@@ -38,6 +35,24 @@ final class Plugin {
 	 * @var self|null
 	 */
 	private static ?self $instance = null;
+
+	/**
+	 * Toggle registry.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var Registry|null
+	 */
+	private ?Registry $registry = null;
+
+	/**
+	 * Settings controller.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var Settings|null
+	 */
+	private ?Settings $settings = null;
 
 	/**
 	 * Returns the shared plugin instance.
@@ -82,9 +97,6 @@ final class Plugin {
 	/**
 	 * Runs on plugin activation.
 	 *
-	 * Does not write default toggle settings yet — that belongs to Phase 1
-	 * (Settings API). Stores the plugin version for later migrations.
-	 *
 	 * @since 0.1.0
 	 *
 	 * @return void
@@ -92,10 +104,13 @@ final class Plugin {
 	public static function activate(): void {
 		if ( false === get_option( self::VERSION_OPTION, false ) ) {
 			add_option( self::VERSION_OPTION, BSOT_VERSION, '', false );
-			return;
+		} else {
+			update_option( self::VERSION_OPTION, BSOT_VERSION, false );
 		}
 
-		update_option( self::VERSION_OPTION, BSOT_VERSION, false );
+		if ( false === get_option( Settings::OPTION_KEY, false ) ) {
+			add_option( Settings::OPTION_KEY, Settings::defaults(), '', false );
+		}
 	}
 
 	/**
@@ -108,25 +123,80 @@ final class Plugin {
 	 * @return void
 	 */
 	public static function deactivate(): void {
-		// Intentionally empty in Phase 0.
+		// Intentionally empty.
 	}
 
 	/**
 	 * Wires plugin hooks.
+	 *
+	 * ConstantLock::capture() MUST stay first: later phases may define
+	 * AUTOSAVE_INTERVAL / EMPTY_TRASH_DAYS from options, which would make a
+	 * late defined() check indistinguishable from a wp-config.php lock.
 	 *
 	 * @since 0.1.0
 	 *
 	 * @return void
 	 */
 	public function boot(): void {
+		ConstantLock::capture();
+
+		$this->registry = new Registry();
+		$this->register_modules();
+		$this->settings = new Settings( $this->registry );
+		$this->settings->hooks();
+
 		add_action( 'init', array( $this, 'load_textdomain' ) );
+		add_action( 'init', array( $this, 'boot_modules' ), 5 );
+	}
+
+	/**
+	 * Toggle registry (empty until Phase 2+ modules are added).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return Registry
+	 */
+	public function registry(): Registry {
+		if ( null === $this->registry ) {
+			$this->registry = new Registry();
+		}
+
+		return $this->registry;
+	}
+
+	/**
+	 * Instantiates toggle modules and adds them to the registry.
+	 *
+	 * Phase 1 has no modules yet; Phase 2+ adds them here.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	private function register_modules(): void {
+		/**
+		 * Fires when toggle modules may be added to the registry.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param Registry $registry Module registry.
+		 */
+		do_action( 'bsot_register_modules', $this->registry );
+	}
+
+	/**
+	 * Lets enabled modules attach their WordPress hooks.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	public function boot_modules(): void {
+		$this->registry()->boot_enabled();
 	}
 
 	/**
 	 * Loads translations from /languages.
-	 *
-	 * WordPress 6.7+ also just-in-time loads from the plugin header; this
-	 * call remains explicit so the domain path is guaranteed.
 	 *
 	 * @since 0.1.0
 	 *

@@ -1,0 +1,161 @@
+<?php
+/**
+ * Contract for a single overhead-toggle module.
+ *
+ * @package BS\OverheadToggles
+ */
+
+declare( strict_types=1 );
+
+namespace BS\OverheadToggles;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Every toggle is a self-contained module implementing this interface.
+ *
+ * A new toggle is a new class plus a Registry entry — Settings and core
+ * bootstrap stay unchanged.
+ *
+ * @since 0.1.0
+ */
+interface Toggle {
+
+	/**
+	 * Stable option key, e.g. `emojis`.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_id(): string;
+
+	/**
+	 * UI label in everyday language.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_label(): string;
+
+	/**
+	 * Motivational category slug: performance, privacy, or cleanup.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_category(): string;
+
+	/**
+	 * One-line summary shown on the toggle row (not the full explanation).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_description(): string;
+
+	/**
+	 * „Was macht's" — technical effect in everyday language.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_what_it_does(): string;
+
+	/**
+	 * „Nutzen" — why turning this off helps.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_benefit(): string;
+
+	/**
+	 * „Bricht es was" — warning text, empty if nothing breaks.
+	 *
+	 * Matches the plan's `get_impact_text()`.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_breaks(): string;
+
+	/**
+	 * Collapsed „Für Entwickler" detail (hooks, option keys). Empty if unused.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_developer_details(): string;
+
+	/**
+	 * Whether the toggle is marked experimental in the UI.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_experimental(): bool;
+
+	/**
+	 * Whether the stored option currently enables this module.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_enabled(): bool;
+
+	/**
+	 * Whether wp-config.php (or another early define) already locked this setting.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_locked(): bool;
+
+	/**
+	 * Everyday-language reason shown when `is_locked()` is true.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return string
+	 */
+	public function get_lock_reason(): string;
+
+	/**
+	 * Default stored value (bool or nested array for granular toggles).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return mixed
+	 */
+	public function get_default(): mixed;
+
+	/**
+	 * Sanitizes a submitted value for this module.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param mixed $value Raw submitted value.
+	 * @return mixed
+	 */
+	public function sanitize( mixed $value ): mixed;
+
+	/**
+	 * Hooks the module into WordPress when it is enabled and not locked.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return void
+	 */
+	public function register(): void;
+}
