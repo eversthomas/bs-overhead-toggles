@@ -58,7 +58,13 @@ abstract class AbstractToggle implements Toggle {
 		$id      = $this->get_id();
 
 		if ( ! array_key_exists( $id, $options ) ) {
-			return (bool) $this->get_default();
+			$default = $this->get_default();
+
+			if ( is_array( $default ) ) {
+				return ! empty( $default['enabled'] );
+			}
+
+			return (bool) $default;
 		}
 
 		$value = $options[ $id ];
@@ -124,5 +130,31 @@ abstract class AbstractToggle implements Toggle {
 		}
 
 		return false;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function show_warning_inline(): bool {
+		return false;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function render_switch_input( bool $enabled, bool $locked ): void {
+		printf(
+			'<input type="hidden" name="%1$s" value="%2$s" %3$s data-bsot-switch-value />',
+			esc_attr( Settings::OPTION_KEY . '[' . $this->get_id() . ']' ),
+			$enabled ? '1' : '0',
+			$locked ? 'disabled="disabled"' : ''
+		);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function render_extra_fields( bool $locked ): void {
+		unset( $locked );
 	}
 }

@@ -183,6 +183,8 @@ final class Plugin {
 		$this->registry->add( new Modules\Shortlink() );
 		$this->registry->add( new Modules\Generator() );
 		$this->registry->add( new Modules\Rsd() );
+		$this->registry->add( new Modules\Gutenberg() );
+		$this->registry->add( new Modules\ClassicWidgets() );
 
 		/**
 		 * Fires when toggle modules may be added to the registry.

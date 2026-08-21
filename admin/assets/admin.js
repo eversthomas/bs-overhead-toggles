@@ -71,6 +71,10 @@
 				status.classList.toggle('is-on', on);
 				status.classList.toggle('is-off', !on);
 			}
+			var extra = row ? row.querySelector('[data-bsot-extra]') : null;
+			if (extra) {
+				extra.hidden = !on;
+			}
 		});
 	});
 })();

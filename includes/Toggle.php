@@ -151,6 +151,36 @@ interface Toggle {
 	public function sanitize( mixed $value ): mixed;
 
 	/**
+	 * Renders the hidden input the switch writes to.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param bool $enabled Current enabled state.
+	 * @param bool $locked  Whether the control is locked.
+	 * @return void
+	 */
+	public function render_switch_input( bool $enabled, bool $locked ): void;
+
+	/**
+	 * Optional extra form controls under the toggle row (post types, whitelists).
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param bool $locked Whether the control is locked.
+	 * @return void
+	 */
+	public function render_extra_fields( bool $locked ): void;
+
+	/**
+	 * Whether the „Bricht es was"-Warnkasten is shown on the row, not only when expanded.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @return bool
+	 */
+	public function show_warning_inline(): bool;
+
+	/**
 	 * Hooks the module into WordPress when it is enabled and not locked.
 	 *
 	 * @since 0.1.0

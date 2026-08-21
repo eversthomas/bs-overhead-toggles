@@ -65,7 +65,14 @@ final class Canonical extends AbstractToggle {
 	 * {@inheritdoc}
 	 */
 	public function get_breaks(): string {
-		return __( 'Ohne Ersatz kann eine Suchmaschine mehrere Adressen derselben Seite als Duplikate werten. Nur abschalten, wenn etwas anderes den Canonical setzt.', 'bs-overhead-toggles' );
+		return __( 'Das ist der Schalter mit dem größten SEO-Risiko. Suchmaschinen nutzen diesen Link, um genau eine bevorzugte Adresse einer Seite zu kennen. Wenn du ihn entfernst, ohne dass ein SEO-Plugin oder das Theme einen eigenen Canonical setzt, können Google und andere dieselbe Seite unter mehreren URLs indexieren — doppelter Inhalt, verwässertes Ranking. Nur einschalten, wenn du sicher weißt, dass etwas anderes den Canonical ausgibt.', 'bs-overhead-toggles' );
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function show_warning_inline(): bool {
+		return true;
 	}
 
 	/**

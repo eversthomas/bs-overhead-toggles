@@ -9,14 +9,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$id          = $toggle->get_id();
-$enabled     = $toggle->is_enabled();
-$locked      = $toggle->is_locked();
-$breaks      = $toggle->get_breaks();
-$dev         = $toggle->get_developer_details();
-$option_name = \BS\OverheadToggles\Settings::OPTION_KEY . '[' . $id . ']';
-$panel_id    = 'bsot-explain-' . $id;
-$switch_id   = 'bsot-switch-' . $id;
+$id        = $toggle->get_id();
+$enabled   = $toggle->is_enabled();
+$locked    = $toggle->is_locked();
+$breaks    = $toggle->get_breaks();
+$dev       = $toggle->get_developer_details();
+$panel_id  = 'bsot-explain-' . $id;
+$switch_id = 'bsot-switch-' . $id;
+$inline    = $toggle->show_warning_inline() && '' !== $breaks;
 ?>
 <div class="bsot-toggle<?php echo $locked ? ' is-locked' : ''; ?>">
 	<div class="bsot-toggle-row">
@@ -30,13 +30,7 @@ $switch_id   = 'bsot-switch-' . $id;
 			<?php disabled( $locked ); ?>
 			data-bsot-switch
 		></button>
-		<input
-			type="hidden"
-			name="<?php echo esc_attr( $option_name ); ?>"
-			value="<?php echo $enabled ? '1' : '0'; ?>"
-			<?php echo $locked ? 'disabled' : ''; ?>
-			data-bsot-switch-value
-		/>
+		<?php $toggle->render_switch_input( $enabled, $locked ); ?>
 
 		<div class="bsot-toggle-copy">
 			<div class="bsot-toggle-label-row">
@@ -67,6 +61,8 @@ $switch_id   = 'bsot-switch-' . $id;
 		</button>
 	</div>
 
+	<?php $toggle->render_extra_fields( $locked ); ?>
+
 	<?php if ( $locked ) : ?>
 		<div class="bsot-warn" role="note">
 			<p class="bsot-warn-label">
@@ -74,6 +70,16 @@ $switch_id   = 'bsot-switch-' . $id;
 				<?php esc_html_e( 'Wird von außen vorgegeben', 'bs-overhead-toggles' ); ?>
 			</p>
 			<p><?php echo esc_html( $toggle->get_lock_reason() ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $inline ) : ?>
+		<div class="bsot-warn" role="note">
+			<p class="bsot-warn-label">
+				<span class="bsot-warn-icon" aria-hidden="true">⚠</span>
+				<?php esc_html_e( 'Bricht es was', 'bs-overhead-toggles' ); ?>
+			</p>
+			<p><?php echo esc_html( $breaks ); ?></p>
 		</div>
 	<?php endif; ?>
 
@@ -86,7 +92,7 @@ $switch_id   = 'bsot-switch-' . $id;
 			<h3><?php esc_html_e( 'Nutzen', 'bs-overhead-toggles' ); ?></h3>
 			<p><?php echo esc_html( $toggle->get_benefit() ); ?></p>
 		</div>
-		<?php if ( '' !== $breaks ) : ?>
+		<?php if ( '' !== $breaks && ! $inline ) : ?>
 			<div class="bsot-warn" role="note">
 				<p class="bsot-warn-label">
 					<span class="bsot-warn-icon" aria-hidden="true">⚠</span>
